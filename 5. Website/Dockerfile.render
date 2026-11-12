@@ -1,0 +1,25 @@
+
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install both application dependency sets
+COPY backend/requirements.txt ./backend-requirements.txt
+COPY frontend/requirements.txt ./frontend-requirements.txt
+
+RUN python -m pip install --no-cache-dir \
+    -r backend-requirements.txt \
+    -r frontend-requirements.txt
+
+# Copy the existing working application
+COPY backend/ ./backend/
+COPY frontend/ ./frontend/
+
+# The internal FastAPI address used by Streamlit
+ENV API_URL=http://127.0.0.1:8000/predict
+
+# Render routes HTTP traffic to this public port
+EXPOSE 10000
+
+# Start FastAPI internally, then Streamlit publicly
+CMD ["sh", "-c", "uvicorn backend.api_code.main:app --host 127.0.0.1 --port 8000 & exec streamlit run frontend/frontend.py --server.address=0.0.0.0 --server.port=${PORT:-10000} --server.headless=true"]

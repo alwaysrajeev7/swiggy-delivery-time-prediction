@@ -1,0 +1,22 @@
+
+# Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+
+# Local Python virtual environment
+myenv/
+venv/
+.venv/
+
+# Git and VS Code
+.git/
+.vscode/
+
+# Sensitive environment files
+.env
+.env.*
+
+# Temporary files
+*.log
+.DS_Store
